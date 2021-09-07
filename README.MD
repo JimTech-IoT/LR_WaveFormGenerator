@@ -18,7 +18,7 @@ This article introduces the approach of testing the sensitivity of Silicon Labs 
 - IEEE 488.2 GPIB Driver (Install the driver according to your GPIB card provider).
   - [Agilent 82357B USB/GPIB Driver](https://www.keysight.com/hk/en/support/82357B/usb-gpib-interface-high-speed-usb-2-0.html#drivers)
   - [NI GPIB-USB-HS Driver](https://www.ni.com/zh-cn/support/downloads/drivers/download.ni-488-2.html#409630)
-- [Silabs_LR_WaveformGenerator.exe](releases/download/v1.2/Silabs_LR_WaveformGenerator.exe)
+- [Silabs_LR_WaveformGenerator.exe](https://github.com/silabs-JimL/LR_WaveFormGenerator/releases/download/v1.2/Silabs_LR_WaveformGenerator.exe)
 
 ## Connection
 <div align="center">
@@ -37,7 +37,7 @@ Please use the GPIB driver to verify the GPIB connection. Assuming you are using
 
 ## How It Works
 ### Generate Waveform
-1. Start the tool [Silabs_LR_WaveformGenerator.exe](releases/download/v1.2/Silabs_LR_WaveformGenerator.exe).
+1. Start the tool [Silabs_LR_WaveformGenerator.exe](https://github.com/silabs-JimL/LR_WaveFormGenerator/releases/download/v1.2/Silabs_LR_WaveformGenerator.exe).
 2. Fill the payload which you want test. The header and CRC of the frame will be automatically updated. The long range PHY uses IEEE802.15.4 frame format, like below:
 
     <div align="center">
