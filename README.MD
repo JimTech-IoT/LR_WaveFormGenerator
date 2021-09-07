@@ -1,47 +1,42 @@
 
-<details>
-<summary>
-    <font size=5>Table of Content</font> 
-</summary>  
 
-- [1. Hardware](#1-hardware)
-- [2. Connection](#2-connection)
-- [3. Generate Waveform](#3-generate-waveform)
-- [4. Settings of E4432B](#4-settings-of-e4432b)
-- [5. Test](#5-test)
-- [6. Test Report](#6-test-report)
-  - [6.1. Test Result of Long Range DSSS 1.2 kbps PHY](#61-test-result-of-long-range-dsss-12-kbps-phy)
-  - [6.2. Test Result of Long Range DSSS 9.6 kbps PHY](#62-test-result-of-long-range-dsss-96-kbps-phy)
-- [FAQ](#faq)
-  - [How to configure the trigger pin in RAILTEST?](#how-to-configure-the-trigger-pin-in-railtest)
+# How to Test Sensitivity of Long Range DSSS PHY on E4432B
 
-</details>
-
-********
-
-<h1 align="center">How to test sensitivity of Long Range DSSS PHY on E4432B</h1>  
-
-********
+## Overview
+This article introduces the approach of testing the sensitivity of Silicon Labs Long Range PHY on Agilent E4432B, including the tool of generating the ARB waveform, the steps of setting the E4432B and how to do the PER test.
 
 
-# 1. Hardware
+## Hardware Required
 - Signal Generator E4432B
-- IEEE 488.2 GPIB to USB cable
+- IEEE 488.2 GPIB to USB cable (One of the following).
+  - [Agilent 82357B USB/GPIB Interface](https://www.keysight.com/hk/en/product/82357B/usb-gpib-interface-high-speed-usb-2-0.html)
+  - [NI GPIB-USB-HS](https://www.ni.com/zh-cn/support/model.gpib-usb-hs.html)
 - PC
 - DUT
 
+## Software Required
+- IEEE 488.2 GPIB Driver (Install the driver according to your GPIB card provider).
+  - [Agilent 82357B USB/GPIB Driver](https://www.keysight.com/hk/en/support/82357B/usb-gpib-interface-high-speed-usb-2-0.html#drivers)
+  - [NI GPIB-USB-HS Driver](https://www.ni.com/zh-cn/support/downloads/drivers/download.ni-488-2.html#409630)
+- [Silabs_LR_WaveformGenerator.exe](releases/download/v1.2/Silabs_LR_WaveformGenerator.exe)
 
-# 2. Connection
+## Connection
 <div align="center">
   <img src="images/connection.png">  
 </div>  
 </br> 
 
 **Notes:**  
-- To test the verify the GPIB connection, please make sure the GPIB driver is installed correctly. Both [Keysight](https://www.keysight.com) and [National Instrument](https://www.ni.com/) provide GPIB to USB cable. Please install the correct driver and verify the connection according to the guide of the manufacture.
-- 
 
-# 3. Generate Waveform
+Please use the GPIB driver to verify the GPIB connection. Assuming you are using the NI GPIB-USB-HS card, you can start the program **NI Max** to verify it.
+<div align="center">
+    <img src="images/ni-max.png">  
+</div>  
+</br>
+
+
+## How It Works
+### Generate Waveform
 1. Start the tool [Silabs_LR_WaveformGenerator.exe](releases/download/v1.2/Silabs_LR_WaveformGenerator.exe).
 2. Fill the payload which you want test. The header and CRC of the frame will be automatically updated. The long range PHY uses IEEE802.15.4 frame format, like below:
 
@@ -63,7 +58,7 @@
 5. Click the button **Scan** to scan the connected E4432B, then click the **Download** button to download the generated waveform to the instrument. It takes about 30~40 seconds to complete.
 
 
-# 4. Settings of E4432B
+### Settings of E4432B
 1. On the signal generator keypad, press the **Mode** button and then select **Arb Waveform Generator | Dual Arb**.
 2. Choose **Select Waveform**. If the ARB waveform list is empty, choose **Waveform Segments**.
 3. Select **Load**, then use the wheel to navigate to the waveform file `LR_9K6`, then select **Load Segment From NVARB Memory**.
@@ -122,7 +117,7 @@
     - Delay Off
 11. Turn **Arb** to On.
 
-# 5. Test
+### Test
 Please refer to section `4.2.3` of [AN972](https://www.silabs.com/documents/public/application-notes/an972-efr32-rf-eval-guide.pdf) to learn the testing steps.
 
 The general steps are:  
@@ -140,10 +135,10 @@ The general steps are:
 4. Use command `perstatus` or `status` to check the status.
 5. Adjust the transmitting power of the E4432B and then repeat step 3/4 until the PER reaches the tolerance.
 
-# 6. Test Report
+## Test Report
 We have made a test based on the board `EFR32FG14 2400/490 MHz 19 dBm Radio Board with TCXO (SLWRB4261A)`. The test is done in a **shielded room**. The test result is like below.
 
-## 6.1. Test Result of Long Range DSSS 1.2 kbps PHY
+### Test Result of Long Range DSSS 1.2 kbps PHY
 
 SG Tx Power | SG Tx Count | DUT Rx Count
 ---------|----------|---------
@@ -156,7 +151,7 @@ SG Tx Power | SG Tx Count | DUT Rx Count
 
  **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-129.4 dbm**.
 
-## 6.2. Test Result of Long Range DSSS 9.6 kbps PHY
+### Test Result of Long Range DSSS 9.6 kbps PHY
 
 SG Tx Power | SG Tx Count | DUT Rx Count
 ---------|----------|---------
@@ -173,8 +168,8 @@ SG Tx Power | SG Tx Count | DUT Rx Count
 
  **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-120.5 dbm**.
 
-# FAQ
-## How to configure the trigger pin in RAILTEST?
+## FAQ
+### How to configure the trigger pin in RAILTEST?
 On Simplicity Studio V5, open the `.slcp` file of the RAILTEST project, open the configuration of the component `RAILtest Application, Core`, you can select a GPIO as the trigger.
 <div align="center">
     <img src="images/triggerpin.png">  
