@@ -110,9 +110,9 @@ If you are using any other Signal Generator, or have further questions about thi
 8. Press **Return** button.
 9. Select `Trigger` -> `Single`.
 10. Select **Trigger Set-up** and set the following:
-- `Trigger Source` -> `Ext`
-- `Ext Pol` -> `Neg`
-- `Ext Delay` -> `Off`
+    - `Trigger Source` -> `Ext`
+    - `Ext Pol` -> `Neg`
+    - `Ext Delay` -> `Off`
 11. Verify that the displayed menu in the middle of the screen shows the following before continuing:
     - Sample Clock 614.4 KHZ
     - Reconstruction 8 MHz
@@ -138,7 +138,8 @@ The general steps are:
    perrx 1000 10000
    ```
    The first argument `1000` means to test 1000 packets.  
-   The second argument `10000` means to delay 10000 us between each packets.
+   The second argument `10000` means to delay 10000 us between each packets.  
+   By running this command, the DUT will generate a pulse on the GPIO to trigger the Signal Generator to transmit a packet every 10000 us, total 1000 packets.
 4. Use command `perstatus` or `status` to check the status.
 5. Adjust the transmitting power of the E4432B and then repeat step 3/4 until the PER reaches the tolerance.
 
