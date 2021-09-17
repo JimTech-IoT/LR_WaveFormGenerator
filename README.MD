@@ -3,8 +3,13 @@
 # How to Test Sensitivity of Long Range DSSS PHY on E4432B
 
 ## Overview
+Silicon Labs has provided a Long Range DSSS PHY to help customers to achieve the crucial design element of maximum effective range. The Long Range feature is described in [UG460](https://www.silabs.com/documents/public/user-guides/ug460-efr32-series-1-long-range-configuration.pdf).   
+
+The Long Range DSSS PHY is derived from the highly optimized IEEE802.15.4 Zigbee PHY. Currently the detailed parameters of this PHY is not public and users can't customize it. To help customers test the sensitivity of their final Long Range products, we implement a tool to generate the ARB waveforms.   
+
 This article introduces the approach of testing the sensitivity of Silicon Labs Long Range PHY on Agilent E4432B, including the tool of generating the ARB waveform, the steps of setting the E4432B and how to do the PER test.
 
+If you are using any other Signal Generator, or have further questions about this approach, please feel free to contact us through [Silicon Labs support portal](https://community.silabs.com/s/support-home), thanks.
 
 ## Hardware Required
 - Signal Generator E4432B
@@ -18,7 +23,7 @@ This article introduces the approach of testing the sensitivity of Silicon Labs 
 - IEEE 488.2 GPIB Driver (Install the driver according to your GPIB card provider).
   - [Agilent 82357B USB/GPIB Driver](https://www.keysight.com/hk/en/support/82357B/usb-gpib-interface-high-speed-usb-2-0.html#drivers)
   - [NI GPIB-USB-HS Driver](https://www.ni.com/zh-cn/support/downloads/drivers/download.ni-488-2.html#409630)
-- [Silabs_LR_WaveformGenerator.exe](https://github.com/silabs-JimL/LR_WaveFormGenerator/releases/download/v1.2/Silabs_LR_WaveformGenerator.exe)
+- [Silabs_LR_WaveformGenerator.exe](https://github.com/silabs-JimL/LR_WaveFormGenerator/releases/download/v1.2/Silabs_LR_WaveformGenerator.exe) (Please make sure the GPIB driver is installed before running this tool).
 
 ## Connection
 <div align="center">
@@ -28,12 +33,12 @@ This article introduces the approach of testing the sensitivity of Silicon Labs 
 
 **Notes:**  
 
-Please use the GPIB driver to verify the GPIB connection. Assuming you are using the NI GPIB-USB-HS card, you can start the program **NI Max** to verify it.
-<div align="center">
-    <img src="images/ni-max.png">  
-</div>  
-</br>
-
+- Please use the GPIB driver to verify the GPIB connection. Assuming you are using the NI GPIB-USB-HS card, you can start the program **NI Max** to verify it.
+  <div align="center">
+      <img src="images/ni-max.png">  
+  </div>  
+  </br>
+- The serial port connection is used to run CLI commands on the DUT.
 
 ## How It Works
 ### Generate Waveform
@@ -45,9 +50,11 @@ Please use the GPIB driver to verify the GPIB connection. Assuming you are using
     </div>  
     </br>
     
-    **Note**: The byte order in the GUI of the tool is the same with the byte order of the packet over the air.
+    **Notes**: 
+    - The byte order in the GUI of the tool is the same with the byte order of the packet over the air.
+    - The LongRange PHY uses IEEE802.15.4 frame format. The maximum frame size is 127 bytes. As the CRC field takes 2 bytes, users can input maximum **125** bytes as the payload.
 
-3. Fill the waveform file name. This is the waveform file name stored on the signal generator.
+3. Fill the waveform file name. This is the waveform file name stored on the signal generator. The filename is **non-case-sensitive**.
 4. Press the button “Generate” to generate the IQ data.
    
     <div align="center">
@@ -55,7 +62,7 @@ Please use the GPIB driver to verify the GPIB connection. Assuming you are using
     </div>  
     </br>   
 
-5. Click the button **Scan** to scan the connected E4432B, then click the **Download** button to download the generated waveform to the instrument. It takes about 30~40 seconds to complete.
+5. Click the button **Scan** to scan the connected E4432B, then click the **Download** button to download the generated waveform to the instrument. It takes about **30~40** seconds to complete. The waveform file will be stored on E4432B as a non-volatile file.
 
 
 ### Settings of E4432B
@@ -149,7 +156,7 @@ SG Tx Power | SG Tx Count | DUT Rx Count
  -129.3 | 5000 | 4957
  -129.4 | 5000 | 4955
 
- **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-129.4 dbm**.
+ **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-129.4 dbm**. The result is in accord with the measured data in table 3-1 of [UG460](https://www.silabs.com/documents/public/user-guides/ug460-efr32-series-1-long-range-configuration.pdf) (Pay attention that the DUT uses a TCXO which makes the result a little better).
 
 ### Test Result of Long Range DSSS 9.6 kbps PHY
 
@@ -166,7 +173,8 @@ SG Tx Power | SG Tx Count | DUT Rx Count
  -120.6 | 1000 | 989
  -120.5 | 5000 | 4970
 
- **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-120.5 dbm**.
+ **Conclusion**: With PER tolerance set to 1%, the sensitivity is **-120.5 dbm**. The result is in accord with the measured data in table 3-1 of [UG460](https://www.silabs.com/documents/public/user-guides/ug460-efr32-series-1-long-range-configuration.pdf) (Pay attention that the DUT uses a TCXO which makes the result a little better).
+
 
 ## FAQ
 ### How to configure the trigger pin in RAILTEST?
@@ -175,5 +183,12 @@ On Simplicity Studio V5, open the `.slcp` file of the RAILTEST project, open the
     <img src="images/triggerpin.png">  
 </div>  
 </br>
+
+## References
+- [KBA:Understanding DSSS Encoding and Decoding on EFR32 Devices](https://community.silabs.com/s/article/understanding-dsss-encoding-and-decoding-on-efr32-devices?language=en_US)
+- [KBA:How to Download 802.15.4 Arbitrary Waveform Files to Agilent Signal Generator E4432B](https://community.silabs.com/s/article/how-to-download-802-15-4-arbitrary-waveform-files-to-agilent-signal-generator-e4?language=en_US)
+- [KBA:How to Manually Set-up the Arb Waveform Generator for functional test](https://community.silabs.com/s/article/how-to-manually-set-up-the-arb-waveform-generator-for-functional-test?language=en_US)
+- [Generation_of_IEEE_802154_Signals](https://scdn.rohde-schwarz.com/ur/pws/dl_downloads/dl_application/application_notes/1gp105/1GP105_1E_Generation_of_IEEE_802154_Signals.pdf)
+- [E44xxB ESG Signal Generators SCPI Command Reference](https://www.keysight.com/hk/en/assets/9018-40176/programming-guides/9018-40176.pdf)
 
 
